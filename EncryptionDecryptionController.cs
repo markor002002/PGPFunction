@@ -24,9 +24,16 @@ namespace PGPFunction
 
             var encryptionKeyStream = new MemoryStream();
             await DownloadFileFromBlobAsync(Request.EncryptionDecryptionKeyFile, encryptionKeyStream);
+            
+            
+           
 
-            await new PGP().EncryptStreamAsync(inputStream, outputStream, encryptionKeyStream, Request.Armor);
-
+           // await new PGP().EncryptStreamAsync(inputStream, outputStream, encryptionKeyStream, Request.Armor);
+           	EncryptionKeys encryptionKeys;
+            encryptionKeys = new EncryptionKeys(encryptionKeyStream);
+            PGP pgp = new PGP(encryptionKeys);
+            await pgp.EncryptAsync(inputStream, outputStream);
+ 
             await UploadStreamToBlobAsync(Request.OutputFile, outputStream);
      
         }
@@ -41,7 +48,13 @@ namespace PGPFunction
             var encryptionKeyStream = new MemoryStream();
             await DownloadFileFromBlobAsync(Request.EncryptionDecryptionKeyFile, encryptionKeyStream);
 
-            await new PGP().DecryptStreamAsync(inputStream, outputStream, encryptionKeyStream, Request.passPhrase);
+         //   await new PGP().DecryptStreamAsync(inputStream, outputStream, encryptionKeyStream, Request.passPhrase);
+
+
+           	EncryptionKeys encryptionKeys;
+            encryptionKeys = new EncryptionKeys(encryptionKeyStream, Request.passPhrase);
+            PGP pgp = new PGP(encryptionKeys);
+            await pgp.DecryptAsync(inputStream, outputStream);
 
             await UploadStreamToBlobAsync(Request.OutputFile, outputStream);
         }
