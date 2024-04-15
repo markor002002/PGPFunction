@@ -17,7 +17,7 @@ namespace PGPFunction
 
         public async Task EncryptAsync()
         {
-/*             var inputStream = new MemoryStream();
+            var inputStream = new MemoryStream();
             await DownloadFileFromBlobAsync(Request.InputFile, inputStream);
 
             var outputStream = new MemoryStream();
@@ -27,7 +27,7 @@ namespace PGPFunction
 
             await new PGP().EncryptStreamAsync(inputStream, outputStream, encryptionKeyStream, Request.Armor);
 
-            await UploadStreamToBlobAsync(Request.OutputFile, outputStream); */
+            await UploadStreamToBlobAsync(Request.OutputFile, outputStream);
      
         }
 
