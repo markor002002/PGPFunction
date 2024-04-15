@@ -9,9 +9,11 @@ namespace PGPFunction
         #region Properties
         public required AzureFileInfo InputFile { get; set; }
         public required AzureFileInfo OutputFile { get; set; }
-        public required AzureFileInfo EncryptionDecryptionKeyFile { get; set; }
+       // public required AzureFileInfo EncryptionDecryptionKeyFile { get; set; }
 
-        public string? passPhrase {get;set;}
+     //   public string? passPhrase {get;set;}
+
+        public required string pgpKeyName {get;set;}
         public bool Armor { get; set; } = true;
 
         #endregion
@@ -21,7 +23,7 @@ namespace PGPFunction
         {
             InputFile.Validate(nameof(InputFile));
             OutputFile.Validate(nameof(OutputFile));
-            EncryptionDecryptionKeyFile.Validate(nameof(EncryptionDecryptionKeyFile));
+           // EncryptionDecryptionKeyFile.Validate(nameof(EncryptionDecryptionKeyFile));
         }
         #endregion
     }
