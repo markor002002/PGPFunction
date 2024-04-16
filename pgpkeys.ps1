@@ -19,7 +19,7 @@ $passcode = Read-Host -Prompt 'Enter your passcode'
 Write-Host "You key name: '$keyname' and passphrase: '$passcode'"
 
 
-New-PGPKey -FilePathPublic $PSScriptRoot\Keys\PGP-$keyname-public.asc -FilePathPrivate $PSScriptRoot\Keys\PGP-$keyname-private.asc -UserName '$env:username' -Password '$passcode'
+New-PGPKey -FilePathPublic $PSScriptRoot\Keys\PGP-$keyname-public.asc -FilePathPrivate $PSScriptRoot\Keys\PGP-$keyname-private.asc -UserName $env:username -Password $passcode
 
 #$publicPGPKey = ConvertTo-Base64 -Path $PSScriptRoot\Keys\PGP-$keyname-public.asc
 #$privatePGPKey = ConvertTo-Base64 -Path $PSScriptRoot\Keys\PGP-$keyname-private.asc

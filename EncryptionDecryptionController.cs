@@ -76,9 +76,9 @@ namespace PGPFunction
            	//EncryptionKeys encryptionKeys;
             //encryptionKeys = new EncryptionKeys(encryptionKeyStream, Request.passPhrase);
             //PGP pgp = new PGP(encryptionKeys);
-            
+            passPhrase = "12345";
             EncryptionKeys encryptionKeys;
-            encryptionKeys = new EncryptionKeys(privateKey, passPhrase);
+            encryptionKeys = new EncryptionKeys(privateKey); //, passPhrase);
             PGP pgp = new PGP(encryptionKeys);
 
             await pgp.DecryptAsync(inputStream, outputStream);
