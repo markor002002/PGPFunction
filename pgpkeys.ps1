@@ -19,8 +19,7 @@ $passcode = Read-Host -Prompt 'Enter your passcode'
 Write-Host "You key name: '$keyname' and passphrase: '$passcode'"
 
 
-New-PGPKey -FilePathPublic $PSScriptRoot\Keys\PGP-$keyname-public.asc -FilePathPrivate $PSScriptRoot\Keys\PGP-$keyname-private.asc -UserName $env:username 
-#-Password $passcode
+New-PGPKey -FilePathPublic $PSScriptRoot\Keys\PGP-$keyname-public.asc -FilePathPrivate $PSScriptRoot\Keys\PGP-$keyname-private.asc -UserName $env:username -Password $passcode
 
 #$publicPGPKey = ConvertTo-Base64 -Path $PSScriptRoot\Keys\PGP-$keyname-public.asc
 #$privatePGPKey = ConvertTo-Base64 -Path $PSScriptRoot\Keys\PGP-$keyname-private.asc
@@ -30,9 +29,9 @@ $file = "$PSScriptRoot\Keys\PGP-$keyname-public.asc"
 $bytes = Get-Content $file -Encoding Byte
 $publicPGPKey = [Convert]::ToBase64String($bytes)
 
-$file = "$PSScriptRoot\Keys\PGP-$keyname-private.asc"
-$bytes = Get-Content $file -Encoding Byte
-$privatePGPKey = [Convert]::ToBase64String($bytes)
+$file2 = "$PSScriptRoot\Keys\PGP-$keyname-private.asc"
+$bytes2 = Get-Content $file2 -Encoding Byte
+$privatePGPKey = [Convert]::ToBase64String($bytes2)
 
 az keyvault secret set --name "PGP-$keyname-passcode"  --vault-name "$keyvault" --value "$passcode"
 az keyvault secret set --name "PGP-$keyname-public"  --vault-name "$keyvault" --value $publicPGPKey --encoding base64
