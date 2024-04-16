@@ -8,27 +8,31 @@ namespace PGPFunction
 {
     public class EncryptionDecryptionController
     {
+        public EncryptionDecryptionRequest Request { get; set; }
 
+        public EncryptionDecryptionController(EncryptionDecryptionRequest _request)
+        {
+            this.Request = _request;
+        }
 
-        public async Task EncryptAsync(string encryptionKeys, string passPhrase)
+        public async Task EncryptAsync()
         {
             var inputStream = new MemoryStream();
             await DownloadFileFromBlobAsync(Request.InputFile, inputStream);
 
             var outputStream = new MemoryStream();
 
-           // var encryptionKeyStream = new MemoryStream();
-           // await DownloadFileFromBlobAsync(Request.EncryptionDecryptionKeyFile, encryptionKeyStream);
+            var encryptionKeyStream = new MemoryStream();
+            await DownloadFileFromBlobAsync(Request.EncryptionDecryptionKeyFile, encryptionKeyStream);
             
             
            
 
            // await new PGP().EncryptStreamAsync(inputStream, outputStream, encryptionKeyStream, Request.Armor);
            	EncryptionKeys encryptionKeys;
-            encryptionKeys = new EncryptionKeys(encryptionKeys);
+            encryptionKeys = new EncryptionKeys(encryptionKeyStream);
             PGP pgp = new PGP(encryptionKeys);
             await pgp.EncryptAsync(inputStream, outputStream);
-
  
             await UploadStreamToBlobAsync(Request.OutputFile, outputStream);
      
@@ -41,16 +45,14 @@ namespace PGPFunction
 
             var outputStream = new MemoryStream();
 
-            // var encryptionKeyStream = new MemoryStream();
-            // await DownloadFileFromBlobAsync(Request.EncryptionDecryptionKeyFile, encryptionKeyStream);
+            var encryptionKeyStream = new MemoryStream();
+            await DownloadFileFromBlobAsync(Request.EncryptionDecryptionKeyFile, encryptionKeyStream);
 
-            // await new PGP().DecryptStreamAsync(inputStream, outputStream, encryptionKeyStream, Request.passPhrase);
-            
-
+         //   await new PGP().DecryptStreamAsync(inputStream, outputStream, encryptionKeyStream, Request.passPhrase);
 
 
            	EncryptionKeys encryptionKeys;
-            encryptionKeys = new EncryptionKeys(publicKey, passPhrase);
+            encryptionKeys = new EncryptionKeys(encryptionKeyStream, Request.passPhrase);
             PGP pgp = new PGP(encryptionKeys);
             await pgp.DecryptAsync(inputStream, outputStream);
 

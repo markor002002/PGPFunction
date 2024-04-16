@@ -10,7 +10,7 @@ using Microsoft.Extensions.Logging;
 //using System.Text;
 //using PgpCore;
 using Newtonsoft.Json;
-using System.Text;
+
 
 namespace PGPFunction
 {
@@ -25,13 +25,6 @@ namespace PGPFunction
             _logger = logger;
         }
 
-        public EncryptionDecryptionRequest Request { get; set; }
-
-        public PGPEncrypt(EncryptionDecryptionRequest _request)
-        {
-            this.Request = _request;
-        }
-
         [Function(nameof(PGPEncrypt))]
 
         public async Task<IActionResult> Run([HttpTrigger(AuthorizationLevel.Function, "post")] HttpRequest req)       
@@ -44,49 +37,14 @@ namespace PGPFunction
 
 			try
             {
-
-                
                 if(request == null)
                 {
                     throw new ArgumentException("Request parameters are missing or not in the correct format.");
                 }
+
                 request.validate();
 
-                string publicKeyBase64 = Environment.GetEnvironmentVariable("pgp-" + Request.pgpKeyName + "-public");
-                string passPhrase = Environment.GetEnvironmentVariable("pgp-" + Request.pgpKeyName + "-passPhrase");
-                
-                if((string.IsNullOrEmpty(publicKeyBase64)))
-                {
-                    throw new ArgumentException("Request parameters are missing or not in the correct format.");
-                }
-
-                
-                byte[] publicKeyBytes = Convert.FromBase64String(publicKeyBase64);
-                string publicKey = Encoding.UTF8.GetString(publicKeyBytes);
-
-           //     await new EncryptionDecryptionController(request).EncryptAsync(publicKey, passPhrase);
-
-            var inputStream = new MemoryStream();
-            await DownloadFileFromBlobAsync(Request.InputFile, inputStream);
-
-            var outputStream = new MemoryStream();
-
-           // var encryptionKeyStream = new MemoryStream();
-           // await DownloadFileFromBlobAsync(Request.EncryptionDecryptionKeyFile, encryptionKeyStream);
-            
-            
-           
-
-           // await new PGP().EncryptStreamAsync(inputStream, outputStream, encryptionKeyStream, Request.Armor);
-           	EncryptionKeys encryptionKeys;
-            encryptionKeys = new EncryptionKeys(encryptionKeys);
-            PGP pgp = new PGP(encryptionKeys);
-            await pgp.EncryptAsync(inputStream, outputStream);
-
- 
-            await UploadStreamToBlobAsync(Request.OutputFile, outputStream);
-     
-
+                await new EncryptionDecryptionController(request).EncryptAsync();
             }
             catch (Exception ex)
             {
