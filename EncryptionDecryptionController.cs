@@ -25,7 +25,7 @@ namespace PGPFunction
             var encryptionKeyStream = new MemoryStream();
             //await DownloadFileFromBlobAsync(Request.EncryptionDecryptionKeyFile, encryptionKeyStream);
             
-            string publicKeyBase64 = Environment.GetEnvironmentVariable("pgp"+Request.Keyname+"public");
+            string publicKeyBase64 = Environment.GetEnvironmentVariable("pgp-"+Request.Keyname+"-public");
 
             if (string.IsNullOrEmpty(publicKeyBase64))
             {
