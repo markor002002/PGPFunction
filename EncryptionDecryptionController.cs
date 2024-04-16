@@ -64,7 +64,7 @@ namespace PGPFunction
 
          //   await new PGP().DecryptStreamAsync(inputStream, outputStream, encryptionKeyStream, Request.passPhrase);
             string privateKeyBase64 = Environment.GetEnvironmentVariable("pgp-"+Request.Keyname+"-private");
-            string passPhrase = Environment.GetEnvironmentVariable("pgp-"+Request.Keyname+"-passcode");
+            string passPhrasekey = Environment.GetEnvironmentVariable("pgp-"+Request.Keyname+"-passcode");
             if (string.IsNullOrEmpty(privateKeyBase64))
             {
               //  return new BadRequestObjectResult($"Please add a base64 encoded public key to an environment variable called pgp-public-key");
@@ -76,7 +76,7 @@ namespace PGPFunction
            	//EncryptionKeys encryptionKeys;
             //encryptionKeys = new EncryptionKeys(encryptionKeyStream, Request.passPhrase);
             //PGP pgp = new PGP(encryptionKeys);
-            string passPhrasekey = "12345";
+           // string passPhrasekey = "12345";
             EncryptionKeys encryptionKeys;
             encryptionKeys = new EncryptionKeys(privateKey, passPhrasekey);
             PGP pgp = new PGP(encryptionKeys);
