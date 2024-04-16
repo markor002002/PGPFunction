@@ -23,15 +23,29 @@ namespace PGPFunction
             var outputStream = new MemoryStream();
 
             var encryptionKeyStream = new MemoryStream();
-            await DownloadFileFromBlobAsync(Request.EncryptionDecryptionKeyFile, encryptionKeyStream);
+            //await DownloadFileFromBlobAsync(Request.EncryptionDecryptionKeyFile, encryptionKeyStream);
             
-            
+            string publicKeyBase64 = Environment.GetEnvironmentVariable("pgp"+Request.Keyname+"public");
+
+            if (string.IsNullOrEmpty(publicKeyBase64))
+            {
+              //  return new BadRequestObjectResult($"Please add a base64 encoded public key to an environment variable called pgp-public-key");
+            }
+
+            byte[] publicKeyBytes = Convert.FromBase64String(publicKeyBase64);
+            string publicKey = Encoding.UTF8.GetString(publicKeyBytes);
            
 
            // await new PGP().EncryptStreamAsync(inputStream, outputStream, encryptionKeyStream, Request.Armor);
+//           	EncryptionKeys encryptionKeys;
+//            encryptionKeys = new EncryptionKeys(encryptionKeyStream);
+//            PGP pgp = new PGP(encryptionKeys);
+
            	EncryptionKeys encryptionKeys;
-            encryptionKeys = new EncryptionKeys(encryptionKeyStream);
+            encryptionKeys = new EncryptionKeys(publicKey);
             PGP pgp = new PGP(encryptionKeys);
+
+            
             await pgp.EncryptAsync(inputStream, outputStream);
  
             await UploadStreamToBlobAsync(Request.OutputFile, outputStream);
@@ -40,7 +54,7 @@ namespace PGPFunction
 
         public async Task DecryptAsync()
         {
-            var inputStream = new MemoryStream();
+/*             var inputStream = new MemoryStream();
             await DownloadFileFromBlobAsync(Request.InputFile, inputStream);
 
             var outputStream = new MemoryStream();
@@ -56,7 +70,7 @@ namespace PGPFunction
             PGP pgp = new PGP(encryptionKeys);
             await pgp.DecryptAsync(inputStream, outputStream);
 
-            await UploadStreamToBlobAsync(Request.OutputFile, outputStream);
+            await UploadStreamToBlobAsync(Request.OutputFile, outputStream); */
         }
 
         public async Task DownloadFileFromBlobAsync(AzureFileInfo _azureFileInfo, MemoryStream _toStream)
