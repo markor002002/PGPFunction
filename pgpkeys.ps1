@@ -33,7 +33,7 @@ $file = "$PSScriptRoot\Keys\PGP-$keyname-private.asc"
 $bytes = Get-Content $file -Encoding Byte
 $privatePGPKey = [Convert]::ToBase64String($bytes)
 
-az keyvault secret set --name "PGP-$keyname-passcode"  --vault-name "$keyvault" --value " $passcode"
+az keyvault secret set --name "PGP-$keyname-passcode"  --vault-name "$keyvault" --value "$passcode"
 az keyvault secret set --name "PGP-$keyname-public"  --vault-name "$keyvault" --value $publicPGPKey --encoding base64
 az keyvault secret set --name "PGP-$keyname-private"  --vault-name "$keyvault" --value $privatePGPKey --encoding base64
 
