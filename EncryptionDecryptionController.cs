@@ -4,6 +4,9 @@
 using Azure.Storage.Blobs.Specialized;
 using PgpCore;
 using System.Text;
+using Azure.Identity;
+using Azure.Storage.Blobs;
+
 namespace PGPFunction
 {
     public class EncryptionDecryptionController
@@ -90,8 +93,14 @@ namespace PGPFunction
         {
             try
             {
-                var blobClient = new BlockBlobClient(_azureFileInfo.ConnectionString, _azureFileInfo.BlobContainerName, _azureFileInfo.BlobName);
-                await blobClient.DownloadToAsync(_toStream);
+                //var blobClient = new BlockBlobClient(_azureFileInfo.ConnectionString, _azureFileInfo.BlobContainerName, _azureFileInfo.BlobName);
+                //await blobClient.DownloadToAsync(_toStream);
+                //_toStream.Position = 0;
+                
+                var blobServiceClient = new BlockBlobClient(new Uri(_azureFileInfo.ConnectionString + "/"+  _azureFileInfo.BlobContainerName + "/" + _azureFileInfo.BlobName), new DefaultAzureCredential());
+                //var containerClient = blobServiceClient.GetBlobContainerClient(azureFileInfo.BlobContainerName);
+                //var blobClient = containerClient.GetBlobClient(_azureFileInfo.BlobName);
+                await blobServiceClient.DownloadToAsync(_toStream);
                 _toStream.Position = 0;
             }
             catch (Exception ex)
@@ -109,9 +118,16 @@ namespace PGPFunction
         {
             try
             {
-                _stream.Position = 0;
+/*                 _stream.Position = 0;
                 var blobClient = new BlockBlobClient(_azureFileInfo.ConnectionString, _azureFileInfo.BlobContainerName, _azureFileInfo.BlobName);
-                await blobClient.UploadAsync(_stream);
+                await blobClient.UploadAsync(_stream); */
+
+                _stream.Position = 0;
+                var blobServiceClient = new BlockBlobClient(new Uri(_azureFileInfo.ConnectionString + "/"+  _azureFileInfo.BlobContainerName + "/" + _azureFileInfo.BlobName), new DefaultAzureCredential());
+                //var containerClient = blobServiceClient.GetBlobContainerClient(azureFileInfo.BlobContainerName);
+                //var blobClient = containerClient.GetBlobClient(_azureFileInfo.BlobName);
+                await blobServiceClient.UploadAsync(_stream);
+
             }
             catch (Exception ex)
             {
